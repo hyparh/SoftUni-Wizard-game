@@ -10,21 +10,23 @@
 <body>
     <div class="game-view">
         <div class="start-screen">Start Game</div>
-        <div class="play-screen"></div>
+        <div class="play-screen hidden"></div>
     </div>
 
+    <script src="init.js"></script>
     <script>
         // Current game state
         let state = {};
 
         // Current game DOM elements
-        let game = {
-            startScreen: document.querySelector('.start-screen')
-        };
+        let game = gameFactory();
 
         game.startScreen.addEventListener('click', gameStart);
 
         function gameStart() {
+            game.startScreen.classList.add('hidden');
+            game.playScreen.classList.remove('hidden');
+
 
         }
         

@@ -38,6 +38,17 @@
 
             modifyWizardPosition(state, game);
 
+            // move bugs
+            Array.from(document.getElementsByClassName('bug'))
+                .forEach(b => {
+                    let currentPosition = parseInt(b.style.left);
+                    b.style.left = currentPosition - state.bugStats.speed + 'px';
+
+                    // remove bugs when x < 0
+
+                    //TODO check for collision
+                });
+
             // spawn bugs
             if (state.bugStats.nextBugCreation < timeStamp) {
                 game.createBug();

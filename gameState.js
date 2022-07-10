@@ -3,8 +3,10 @@ function gameStateFactory() {
         gameOver: false,
         wizard: {
             x: 100,
-            y: 200
-        }
+            y: 200,
+            speed: 5
+        },
+        keys: {}
     };
 
     return function() {

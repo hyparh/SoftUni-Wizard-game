@@ -38,6 +38,9 @@
 
             modifyWizardPosition(state, game);
 
+            // spawn bugs
+            game.createBug();
+
             // render 
             wizardElement.style.top = wizard.y + 'px';
             wizardElement.style.left = wizard.x + 'px';

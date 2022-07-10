@@ -8,7 +8,11 @@ function gameStateFactory() {
             height: 100,
             speed: 10
         },
-        keys: {}
+        keys: {},
+        bugStats: {
+            width: 50,
+            height: 50
+        }
     };
 
     return function() {

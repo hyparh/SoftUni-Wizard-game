@@ -10,7 +10,8 @@
 <body>
     <div class="game-view">
         <div class="start-screen">Start Game</div>
-        <div class="play-screen hidden"></div>
+        <div class="score-screen">0 pts.</div>
+        <div class="play-screen hidden"></div>     
     </div>
 
     <script src="gameState.js"></script>
@@ -34,7 +35,7 @@
         
         function gameLoop(timeStamp) {
             let { wizard } = state;
-            let { wizardElement } = game;
+            let { wizardElement, scoreScreen } = game;
 
             modifyWizardPosition(state, game);
         
@@ -42,17 +43,16 @@
             Array.from(document.getElementsByClassName('bug'))
                 .forEach(b => {
                     let currentPosition = parseInt(b.style.left);
-
-                    //TODO check for collision
-                    if(hasCollision(wizardElement, b)) {
-                        state.gameOver = true;
-                    }
-
+                
                     if (currentPosition > 0) {
                         b.style.left = currentPosition - state.bugStats.speed + 'px';
                     } else {
                         b.remove();
-                    }                                       
+                    }    
+                    
+                    if(hasCollision(wizardElement, b)) {
+                        state.gameOver = true;
+                    }
                 });
 
             // spawn bugs
@@ -64,22 +64,29 @@
             // render 
             wizardElement.style.top = wizard.y + 'px';
             wizardElement.style.left = wizard.x + 'px';
+            scoreScreen.textContent = state.score + 'pts.';
 
             if (!state.gameOver) {
+                state.score += 1;
                 window.requestAnimationFrame(gameLoop);
             } else {
-                alert('Game Over');
+                alert('Game Over' + " " + state.score);
             }     
         }
 
         function modifyWizardPosition(state, game) {
             let wizard = state.wizard;
+            let isLowerBound = wizard.y + wizard.height < game.playScreen.offsetHeight;
 
+            if (isLowerBound) {
+                wizard.y += wizard.gravity;
+            }
+       
             if (state.keys.KeyW && wizard.y > 0) {
                 wizard.y -= wizard.speed;
             }
 
-            if (state.keys.KeyS && wizard.y + wizard.height < game.playScreen.offsetHeight) {
+            if (state.keys.KeyS && isLowerBound) {
                 wizard.y += wizard.speed;
             }
 
@@ -92,12 +99,14 @@
             }
         }
 
-        function hasCollision(firstElement, secondElement) {
-            let firstRect = firstElement.getBoundingClientRect();
-            let secondRect = firstElement.getBoundingClientRect();
+        function hasCollision(firstElement, secondElement) {        
+            let first = firstElement.getBoundingClientRect();
+            let second = secondElement.getBoundingClientRect();
 
-            return !(firstRect.top > secondRect.bottom || firstRect.bottom < secondRect.top ||
-            firstRect.right < secondRect.left || firstRect.left > secondRect.right);
+            let hasCollision = !(first.top > second.bottom || first.bottom < second.top 
+            || first.right < second.left || first.left > second.right);
+
+            return hasCollision;
         }
 
         function onKeyDown(e) {
